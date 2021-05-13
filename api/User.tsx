@@ -1,11 +1,10 @@
 import {database} from '../Config';
+import { UserItem } from './RDBInterface';
 
-export const createUser = (uid, email, lang='en') => {
-    database.ref('/users/'+uid).set({
+export const createUser = (uid: string, email: string, lang='en') => {
+    const user: UserItem = {
         email: email,
         lang: lang,
-        friends: false,
-        recipes: false,
-        lists: false
-    });
+    };
+    database.ref('/users/'+uid).set(user);
 };

@@ -1,8 +1,3 @@
-/* eslint-disable prettier/prettier */
-/**
- * @format
- */
-
 import auth from '@react-native-firebase/auth';
 
 import React, { useState, useRef, useEffect } from 'react';

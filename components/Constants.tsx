@@ -1,10 +1,10 @@
 import {Dimensions} from 'react-native';
 
-export const SCREEN = {
-    LOGIN: 'login',
-    SIGNUP: 'signup',
-    LIST: 'list',
-    RECIPE: 'recipe',
+export enum SCREEN {
+    LOGIN = 'login',
+    SIGNUP = 'signup',
+    LIST = 'list',
+    RECIPE = 'recipe',
 };
 
 export const WINDOW = Dimensions.get('window');

@@ -1,9 +1,4 @@
-/* eslint-disable prettier/prettier */
-/**
- * @format
- */
-
-import React from 'react';
+import React, {FC} from 'react';
 import {Modal, Text, View, TouchableOpacity} from 'react-native';
 import {Icon} from 'react-native-elements'
 
@@ -12,7 +7,18 @@ import {HEADER_HEIGHT} from './Constants';
 
 import {textStyle} from '../styles/Common'
 
-const MenuModalItem = ({text, iconName, iconType='feather', action, setModalVisible}) => {
+export interface MenuModalItem {
+    text: string,
+    iconName: string,
+    iconType?: string,
+    action: () => void,
+}
+
+interface MenuModalItemInterface extends MenuModalItem {
+    setModalVisible: React.Dispatch<boolean>
+}
+
+const MenuModalItem: FC<MenuModalItemInterface> = ({text, iconName, iconType='feather', action, setModalVisible}) => {
     return (
         <TouchableOpacity
             style={{marginVertical: 8, width: '100%', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center'}}
@@ -27,7 +33,13 @@ const MenuModalItem = ({text, iconName, iconType='feather', action, setModalVisi
     );
 }
 
-const MenuModal = ({modalVisible, setModalVisible, items}) => {
+interface MenuModalInterface {
+    modalVisible: boolean,
+    setModalVisible: React.Dispatch<boolean>
+    items: MenuModalItem[]
+}
+
+const MenuModal: FC<MenuModalInterface> = ({modalVisible, setModalVisible, items}) => {
     return (
         <Modal
             animationType="slide"
