@@ -4,6 +4,8 @@
  *
  * @format
  */
+require('source-map-support').install();
+
 
 module.exports = {
   transformer: {
