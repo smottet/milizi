@@ -1,34 +1,25 @@
-/* eslint-disable prettier/prettier */
-/**
- * @format
- */
-
-import React, {useState, useContext, useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, KeyboardAvoidingView} from 'react-native';
 
 import auth from '@react-native-firebase/auth';
-
-import {UserContext} from '../App';
 
 import List from './List';
 import Recipe from './Recipe';
 import Header from './Header';
 import Footer from './Footer';
-import MenuModal from './MenuModal';
+import MenuModal, {MenuModalItem} from './MenuModal';
 
 import {SCREEN, HEADER_HEIGHT, FOOTER_HEIGHT, WINDOW} from './Constants';
 
 
 const AppScreen = () => {
 
-    const {user} = useContext(UserContext);
-
     const [userScreen, seUserScreen] = useState(SCREEN.LIST);
     const [menuModalVisible, setMenuModalVisible] = useState(false);
-    const [screenMenuItems, setScreenMenuItems] = useState([]);
-    const [menuItems, setMenuItems] = useState([]);
+    const [screenMenuItems, setScreenMenuItems]: [MenuModalItem[], React.Dispatch<MenuModalItem[]>] = useState([]);
+    const [menuItems, setMenuItems]: [MenuModalItem[], React.Dispatch<MenuModalItem[]>] = useState([]);
 
-    const commonMenuItems = [
+    const commonMenuItems: MenuModalItem[] = [
         {text: 'Preferences', iconName: 'sliders', action: () => {}},
         {text: 'Disconnect', iconName: 'log-out', action: () => {auth().signOut()}},            
     ];
@@ -38,7 +29,6 @@ const AppScreen = () => {
     }, [screenMenuItems]);
 
     const screenData = {}
-
 
     screenData[SCREEN.LIST] = {
         headerTitle: 'My Lists',

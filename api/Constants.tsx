@@ -1,11 +1,17 @@
-export const RIGHT = {
-    CREATOR: 'creator',
-    OWNER: 'owner',
-    EDITOR: 'editor',
-    READER: 'reader',
+export enum RIGHT {
+    CREATOR = 'creator',
+    OWNER = 'owner',
+    EDITOR = 'editor',
+    READER = 'reader',
 };
 
-export const STATE = {
-    PENDING: 'pending',
-    ACCEPTED: 'accepted',
+export enum STATE {
+    PENDING = 'pending',
+    ACCEPTED = 'accepted',
 };
+
+export enum FRIENDSHIP_STATE {
+    SENT = 'sent',
+    PENDING = 'pending',
+    ACCEPTED = 'accepted',
+}

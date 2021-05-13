@@ -1,7 +1,7 @@
 import {database} from '../Config';
 import {STATE, RIGHT} from './Constants';
 
-export const createList = (uid, name, right) => {
+export const createList = (uid: string, name: string, right: RIGHT): string => {
     const userListsRef = database.ref('/users/'+uid+'/lists');
     const newList = userListsRef.push();
     newList.set({
@@ -16,7 +16,29 @@ export const createList = (uid, name, right) => {
     return newList.key;
 };
 
-export const deleteList = async (uid, listId) => {
+export const createListIngredient = (listId: string, ingredientId: string, ingredientName: string,
+                                    recipeId: string = undefined, recipeName: string = undefined): string => {
+    const listRef = database.ref('/lists/'+listId+'/list_ingredients');
+    // TODO Look for duplicate (ingredientId, recipeId) pairs
+    const newListIngredient = listRef.push();
+    newListIngredient.set({
+        ingredient_id: ingredientId,
+        ingredient_name: ingredientName,
+        recipe_id: recipeId,
+        recipe_name: recipeName,
+        qtty: 0,
+        unit: false,
+        checked: false,
+    });
+    return newListIngredient.key;
+}
+
+export const toggleListIngredient = (listId: string, listIngredientId: string, checked: boolean): void => {
+    const listIngredientRef = database.ref('/lists/'+listId+'/list_ingredients/'+listIngredientId+'/checked');
+    listIngredientRef.set(checked);
+}
+
+export const deleteList = async (uid: string, listId: string): Promise<void> => {
     const listRef = database.ref('/lists/'+listId);
     await listRef.keepSynced(true)
     const snapshot = await listRef.once('value')

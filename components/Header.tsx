@@ -1,8 +1,3 @@
-/* eslint-disable prettier/prettier */
-/**
- * @format
- */
-
 import React from 'react';
 import {View, Text, TouchableOpacity} from 'react-native';
 import {Icon} from 'react-native-elements'

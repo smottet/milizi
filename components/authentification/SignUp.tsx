@@ -1,8 +1,3 @@
-/* eslint-disable prettier/prettier */
-/**
- * @format
- */
-
 import React, { useState, useRef } from 'react';
 import {View, KeyboardAvoidingView, ScrollView, TouchableOpacity, Text} from 'react-native';
 import Button from './../common/Button';
