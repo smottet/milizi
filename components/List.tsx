@@ -9,146 +9,11 @@ import {createIngredient} from '../api/Ingredient';
 import {ListIngredientItem, ListIngredientItems, UserListItems} from '../api/RDBInterface';
 import {RIGHT} from '../api/Constants';
 
-import {WINDOW} from './Constants';
+import {TABS_HEIGHT, WINDOW} from './Constants';
 import {DARK_GRAY, VERY_LIGHT_GRAY, BLACK, DARK_ORGANGE, textStyle} from '../styles/Common';
 import {UserContext} from '../App';
 import {MenuModalItem} from './MenuModal';
-
-
-const LIST_TABS_HEIGHT = 75;
-
-
-interface ListTabsInterface {
-    lists: UserListItems,
-    selectedListId: string,
-    selectList: React.Dispatch<string>
-}
-
-const ListTabs: FC<ListTabsInterface> = ({lists, selectedListId, selectList}) => {
-
-    return (
-        <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{alignItems: 'center'}}
-            style={{height: LIST_TABS_HEIGHT, width: '100%'}}
-        >   
-            <AddListInput selectList={selectList}/>
-            {Object.keys(lists).map((listId) => <ListTab 
-                                                    key={listId}
-                                                    text={lists[listId].name}
-                                                    listId={listId}
-                                                    selectedListId={selectedListId}
-                                                    selectList={selectList}
-                                                />)}
-        </ScrollView>
-    )
-}
-
-interface ListTabInterface {
-    text: string,
-    listId: string,
-    selectedListId: string,
-    selectList: React.Dispatch<string>
-};
-
-const ListTab: FC<ListTabInterface> = ({text, listId, selectedListId, selectList}) => {
-    return (
-        <TouchableOpacity style={{justifyContent: 'center', paddingRight: WINDOW.width * 0.05}} onPress={() => {selectList(listId)}}>
-            {
-                selectedListId === listId ? <Divider style={{height: 4, backgroundColor: DARK_ORGANGE, width: '66%'}}/> : undefined
-            }
-            <Text style={[selectedListId === listId ? {...textStyle.h2, color: BLACK} : {...textStyle.h3, color: DARK_GRAY}, {textTransform: 'capitalize', marginTop: 2}]}>{text}</Text>
-        </TouchableOpacity>
-    )
-}
-
-interface AddListInputInterface {
-    selectList: React.Dispatch<string>,
-}
-
-const AddListInput:FC<AddListInputInterface> = ({selectList}) => {
-
-    const {user} = useContext(UserContext);
-    const addListDimension = useRef(new Animated.ValueXY({x: 40, y: 40})).current;
-    const textInputRef = useRef(null);
-    const [newListName, setNewListName] = useState('');
-    const [isExpanded, setIsExpanded] = useState(false);
-
-    useEffect(() => {
-        if (isExpanded) {
-            Keyboard.addListener("keyboardDidHide", blurTextInput);
-        } else {
-            Keyboard.removeListener("keyboardDidHide", blurTextInput);
-        }
-    }, [isExpanded]);
-
-    const expandAddList = () => {
-        setIsExpanded(true);
-        Animated.timing(addListDimension, {
-            duration: 400,
-            toValue: {x: 200, y: 55},
-            useNativeDriver: false,
-        }).start(() => {
-            textInputRef.current.focus();
-        });
-    };
-
-    const collapseAddList = () => {
-        Animated.timing(addListDimension, {
-            duration: 400,
-            toValue: {x: 40, y: 40},
-            useNativeDriver: false,
-        }).start(() => {
-            setIsExpanded(false);
-            setNewListName('');
-        });
-    };
-    
-    const createNewList = () => {
-        if (newListName) {
-            const newListId = createList(user.uid, newListName, RIGHT.OWNER);
-            selectList(newListId);
-        }
-        collapseAddList();
-    };
-
-    const blurTextInput = () => {
-        collapseAddList(); 
-        return true;
-    };
-
-    return (            
-        <Animated.View style={{width: addListDimension.x, height: addListDimension.y, justifyContent: 'center',
-                               alignItems: 'center', marginHorizontal:  WINDOW.width * 0.05}}>
-            <TouchableOpacity 
-                style={{justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%',
-                borderRadius: 8, backgroundColor: VERY_LIGHT_GRAY }} 
-                onPress={expandAddList}
-            >
-                {
-                isExpanded ? 
-                    <TextInput 
-                        ref={textInputRef}
-                        style={{width: '100%', height: '100%', fontSize: 24}}
-                        onSubmitEditing={createNewList}
-                        onBlur={blurTextInput}
-                        value={newListName}
-                        onChangeText={setNewListName}
-                    />
-                : 
-                    <Icon
-                    name='plus'
-                    type='feather'
-                    color={DARK_GRAY}
-                    size={30}
-                    solid={false}
-                    />
-                }
-            </TouchableOpacity>
-        </Animated.View>
-    );
-}
+import { Tabs } from './common/Tabs';
 
 interface IngredientListInterface {
     listId: string,
@@ -359,8 +224,8 @@ const List: FC<ListInterface> = ({setMenuItems}) => {
 
     return (
         <View style={{height: '100%'}}>
-            <View style={{height: LIST_TABS_HEIGHT}}>
-                <ListTabs lists={userLists ? userLists : {}} selectedListId={selectedListId} selectList={setSelectedListId}/>
+            <View style={{height: TABS_HEIGHT}}>
+                <Tabs items={userLists} createItem={(name) => {return createList(user.uid, name, RIGHT.CREATOR)}} selectedItemId={selectedListId} selectItem={setSelectedListId}/>
             </View>
             <View style={{ flex: 1}}>
                 {

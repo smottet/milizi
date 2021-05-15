@@ -43,6 +43,7 @@ export interface UserItem {
     lists?: UserListItems,
     recipes?: UserRecipeItems,
     ingredients?: UserIngredientItems,
+    recipe_categories?: UserRecipeCategoryItems,
 }
 
 export interface FriendItems {
@@ -74,6 +75,14 @@ export interface UserIngredientItems {
 }
 
 export interface UserIngredientItem {
+    name: string,
+}
+
+export interface UserRecipeCategoryItems {
+    [id: string]: UserRecipeCategoryItem,
+}
+
+export interface UserRecipeCategoryItem {
     name: string,
 }
 

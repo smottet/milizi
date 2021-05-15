@@ -10,7 +10,7 @@ const Header = ({title, displayMenu}) => {
     return (
         <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', paddingHorizontal: WINDOW.width*0.05}}>
             <View style={{flex:1}}>
-                <Text style={{...textStyle.h3}}>{title}</Text>
+                <Text style={{...textStyle.h2}}>{title}</Text>
             </View>
             <View style={{flex: 1, justifyContent: 'flex-end', flexDirection: 'row'}}>
                 <TouchableOpacity>
