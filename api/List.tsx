@@ -1,6 +1,10 @@
 import {database} from '../Config';
 import {STATE, RIGHT} from './Constants';
 
+//===================================================
+// List
+//===================================================
+
 export const createList = (uid: string, name: string, right: RIGHT): string => {
     const userListsRef = database.ref('/users/'+uid+'/lists');
     const newList = userListsRef.push();
@@ -15,6 +19,26 @@ export const createList = (uid: string, name: string, right: RIGHT): string => {
     listCreatorRef.set({'state': STATE.ACCEPTED, 'right': RIGHT.CREATOR});
     return newList.key;
 };
+
+export const deleteList = async (uid: string, listId: string): Promise<void> => {
+    const listRef = database.ref('/lists/'+listId);
+    await listRef.keepSynced(true)
+    const snapshot = await listRef.once('value')
+    const list = snapshot.val();
+    if (list.users[uid]) {
+        if (Object.keys(list.users).length <= 1) {
+            listRef.remove();
+        } else {
+            database.ref('/lists/'+listId+'/users/'+uid).remove();
+        }
+    }
+    database.ref('/users/'+uid+'/lists/'+listId).remove();
+    await listRef.keepSynced(false);
+}
+
+//===================================================
+// List Ingredient
+//===================================================
 
 export const createListIngredient = (listId: string, ingredientId: string, ingredientName: string,
                                     recipeId: string = undefined, recipeName: string = undefined): string => {
@@ -38,18 +62,7 @@ export const toggleListIngredient = (listId: string, listIngredientId: string, c
     listIngredientRef.set(checked);
 }
 
-export const deleteList = async (uid: string, listId: string): Promise<void> => {
-    const listRef = database.ref('/lists/'+listId);
-    await listRef.keepSynced(true)
-    const snapshot = await listRef.once('value')
-    const list = snapshot.val();
-    if (list.users[uid]) {
-        if (Object.keys(list.users).length <= 1) {
-            listRef.remove();
-        } else {
-            database.ref('/lists/'+listId+'/users/'+uid).remove();
-        }
-    }
-    database.ref('/users/'+uid+'/lists/'+listId).remove();
-    await listRef.keepSynced(false);
+export const deleteListIngredient = (listId: string, listIngredientId: string): void => {
+    const listIngredientRef = database.ref('/lists/'+listId+'/list_ingredients/'+listIngredientId);
+    listIngredientRef.remove();
 }

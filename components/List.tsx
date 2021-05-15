@@ -4,7 +4,7 @@ import {Divider, Icon} from 'react-native-elements';
 
 import {database} from '../Config';
 
-import {createList, createListIngredient, deleteList, toggleListIngredient} from '../api/List';
+import {createList, createListIngredient, deleteList, deleteListIngredient, toggleListIngredient} from '../api/List';
 import {createIngredient} from '../api/Ingredient';
 import {ListIngredientItem, ListIngredientItems, UserListItems} from '../api/RDBInterface';
 import {RIGHT} from '../api/Constants';
@@ -151,12 +151,12 @@ const AddListInput:FC<AddListInputInterface> = ({selectList}) => {
 }
 
 interface IngredientListInterface {
-    listId: string
+    listId: string,
+    ingredientItems: ListIngredientItems,
+    setIngredientItems: React.Dispatch<ListIngredientItems>,
 }
 
-const IngredientList: FC<IngredientListInterface> = ({listId}) => {
-
-    const [ingredientItems, setIngredientItems]: [ListIngredientItems, React.Dispatch<ListIngredientItems>] = useState({});
+const IngredientList: FC<IngredientListInterface> = ({listId, ingredientItems, setIngredientItems}) => {
 
     useEffect(() => {
         const listRef = database.ref('/lists/'+listId+'/list_ingredients');
@@ -300,6 +300,7 @@ const List: FC<ListInterface> = ({setMenuItems}) => {
     const {user} = useContext(UserContext);
     const [selectedListId, setSelectedListId]: [string, React.Dispatch<string>] = useState(undefined);
     const [userLists, setUserLists]: [UserListItems, React.Dispatch<UserListItems>] = useState({});
+    const [ingredientItems, setIngredientItems]: [ListIngredientItems, React.Dispatch<ListIngredientItems>] = useState({});
 
     useEffect(() => {
         const userListsRef = database.ref('/users/'+user.uid+'/lists');
@@ -321,23 +322,40 @@ const List: FC<ListInterface> = ({setMenuItems}) => {
     useEffect(() => {
         const menuItems: MenuModalItem[] = [];
         if (selectedListId !== undefined) {
+            const checkedItems = Object.entries(ingredientItems).filter(([k, v]) => {
+                return v.checked;
+            }).map(([k, _]) => k);
+
+            if (checkedItems.length) {
+                menuItems.push({
+                    text: 'Remove Checked Items',
+                    iconName: 'trash-2',
+                    action: () => {
+                        checkedItems.forEach((key) => {
+                            deleteListIngredient(selectedListId, key);
+                        })
+                    }
+                });
+            }
+
             menuItems.push({
                 text: 'Remove List', 
-                            iconName: 'trash', 
-                            action: () => {
-                                            const listsIds = Object.keys(userLists).filter((id) => {return id !== selectedListId})
-                                            if (listsIds.length) {
-                                                setSelectedListId(listsIds[0]);
-                                            } else {
-                                                setSelectedListId(undefined);
-                                            }
-                                            deleteList(user.uid, selectedListId);
-                                        }
-                            });
+                iconName: 'trash',
+                action: () => {
+                    const listsIds = Object.keys(userLists).filter((id) => {return id !== selectedListId})
+                    if (listsIds.length) {
+                        setSelectedListId(listsIds[0]);
+                    } else {
+                        setSelectedListId(undefined);
+                    }
+                    deleteList(user.uid, selectedListId);
+                }
+            });
         }
         setMenuItems(menuItems);
         return () => {setMenuItems([]);}
-    }, [selectedListId])
+    }, [selectedListId, ingredientItems])
+
 
     return (
         <View style={{height: '100%'}}>
@@ -348,7 +366,7 @@ const List: FC<ListInterface> = ({setMenuItems}) => {
                 {
                 selectedListId ?
                     <ScrollView>
-                        <IngredientList listId={selectedListId}/>
+                        <IngredientList listId={selectedListId} ingredientItems={ingredientItems} setIngredientItems={setIngredientItems}/>
                         <AddIngredientInput listId={selectedListId}/>
                     </ScrollView>
                 :
