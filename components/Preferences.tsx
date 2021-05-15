@@ -1,5 +1,5 @@
 import React, { FC, useState } from "react";
-import { TouchableOpacity, View } from "react-native";
+import { Image, TouchableOpacity, View } from "react-native";
 import { Icon, Text } from "react-native-elements";
 import { textStyle } from "../styles/Common";
 import { HEADER_HEIGHT, MainScreens, Screens, WINDOW } from "./Constants";
@@ -12,20 +12,50 @@ interface PreferencesInterface {
     mainScreen: MainScreens
 }
 
-const Preferences: FC<PreferencesInterface> = ({setVisibleScreen, mainScreen}) => {
+const Preferences: FC<PreferencesInterface> = ({ setVisibleScreen, mainScreen }) => {
     return (
-        <View style={{ height: HEADER_HEIGHT, flexDirection: 'row', paddingHorizontal: '5%' }}>
-            <TouchableOpacity style={{marginLeft: WINDOW.width*0.05}} onPress={() => setVisibleScreen(mainScreen)} >
-            <Icon
-                name='chevron-left'
-                type='feather'
-                color='black'
-                size={40}
-                style={{ alignContent: 'flex-start' }}
+        <View >
+            <TouchableOpacity style={{ marginLeft: WINDOW.width * 0.05 }} onPress={() => setVisibleScreen(mainScreen)} >
 
-            />
+                <View style={{ height: HEADER_HEIGHT, flexDirection: 'row' }}>
+                    <Icon
+                        name='chevron-left'
+                        type='feather'
+                        color='black'
+                        size={40}
+                        style={{ alignContent: 'flex-start' }}
+
+                    />
+                    <Text style={{ ...textStyle.h1, textAlign: 'center' }}>Preferences</Text>
+
+                </View>
             </TouchableOpacity>
-            <Text style={{ ...textStyle.h1, textAlign: 'center' }}>Preferences</Text>
+
+            <TouchableOpacity>
+
+                <View style={{ height: HEADER_HEIGHT, flexDirection: 'row' }}>
+                    <Image source={require('./unicorn.png')} style={{
+                        width: 100,
+                        height: 100,
+                        resizeMode: 'contain'
+                    }} />
+                    <View style={{ flexDirection:'column' }}>
+                        <Text style={{ ...textStyle.h1, textAlign: 'center' }}>Tim Mottet</Text>
+                        <Text style={{ ...textStyle.h3, textAlign: 'center' }}>View Profile</Text>
+
+                    </View>
+                    <Icon
+                        name='chevron-right'
+                        type='feather'
+                        color='black'
+                        size={40}
+                        style={{ alignContent: 'flex-end' }}
+                    />
+                </View>
+            </TouchableOpacity>
+
+            <Text style={{ ...textStyle.h2 }}>Language</Text>
+
         </View>
     );
 }

@@ -49,7 +49,7 @@ const AppScreen = () => {
         headerTitle: 'My Recipes',
     }
 
-    const body = visibleScreen === Screens.LIST ? <List setMenuItems={setScreenMenuItems} /> : <Recipe setMenuItems={setScreenMenuItems} />
+    const body = visibleScreen === Screens.LIST ? <List setMenuItems={setScreenMenuItems} /> : <Recipe/>
 
     return (visibleScreen === Screens.PREFERENCES ?
         <Preferences mainScreen={mainScreen} setVisibleScreen={setVisibleScreen}></Preferences> :
