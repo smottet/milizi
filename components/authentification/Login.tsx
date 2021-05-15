@@ -7,7 +7,7 @@ import Button from './../common/Button';
 import { Input, Icon } from 'react-native-elements'
 
 import {textStyle, ERROR, BLACK, LIGHT_GRAY} from './../../styles/Common';
-import {SCREEN, WINDOW} from '../Constants'
+import {Screens, WINDOW} from '../Constants'
 
 const Login = ({changeScreen}) => {
 
@@ -81,7 +81,7 @@ const Login = ({changeScreen}) => {
                     <View style={{flex: 3, justifyContent: 'flex-start', alignItems: 'flex-end'}}>
                         <TouchableOpacity 
                             style={{flexDirection: 'row', alignItems: 'center'}} 
-                            onPress={() => changeScreen(SCREEN.SIGNUP)}
+                            onPress={() => changeScreen(Screens.SIGNUP)}
                         >
                             <Text style={{...textStyle.h3, marginRight: 8}}>Create Account</Text>
                             <Icon

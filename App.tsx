@@ -12,7 +12,7 @@ import SignUp from './components/authentification/SignUp';
 
 import AppScreen from './components/AppScreen';
 
-import {SCREEN} from './components/Constants';
+import {Screens} from './components/Constants';
 
 
 export const UserContext = createContext({
@@ -23,7 +23,7 @@ const App = () => {
 
 	const [user, setUser] = useState()
 	const [userStateLoaded, setUserStateLoaded] = useState(false);
-	const [authScreen, setAuthScreen] = useState(SCREEN.LOGIN);
+	const [authScreen, setAuthScreen] = useState(Screens.LOGIN);
 
 	function onAuthStateChanged(user: any) {
 		setUser(user)
@@ -42,7 +42,7 @@ const App = () => {
 	}
 	if (!user) {
 		return (
-			authScreen === SCREEN.LOGIN ? <Login changeScreen={setAuthScreen}/> : <SignUp changeScreen={setAuthScreen}/>
+			authScreen === Screens.LOGIN ? <Login changeScreen={setAuthScreen}/> : <SignUp changeScreen={setAuthScreen}/>
 		);
 	} else {
 		return (

@@ -1,5 +1,6 @@
 package-lock.json
 android/app/google-services.json
+.vscode
 android/local.properties
 # OSX
 #
