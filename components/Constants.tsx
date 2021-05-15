@@ -5,6 +5,7 @@ export enum SCREEN {
     SIGNUP = 'signup',
     LIST = 'list',
     RECIPE = 'recipe',
+    PREFERENCES = 'preferences'
 };
 
 export const WINDOW = Dimensions.get('window');
