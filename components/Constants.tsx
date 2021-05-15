@@ -11,3 +11,4 @@ export const WINDOW = Dimensions.get('window');
 
 export const HEADER_HEIGHT = 80;
 export const FOOTER_HEIGHT = 80;
+export const TABS_HEIGHT = 75;
