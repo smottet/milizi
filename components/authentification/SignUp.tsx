@@ -9,7 +9,7 @@ import auth from '@react-native-firebase/auth';
 import {createUser} from '../../api/User';
 
 import {textStyle, ERROR} from './../../styles/Common';
-import {SCREEN, WINDOW} from '../Constants'
+import {Screens, WINDOW} from '../Constants'
 
 const SignUp = ({changeScreen}) => {
 
@@ -66,7 +66,7 @@ const SignUp = ({changeScreen}) => {
                         <View style={{flex: 3, justifyContent: 'flex-start', alignItems: 'flex-start'}}>
                             <TouchableOpacity 
                                 style={{flexDirection: 'row', alignItems: 'center'}} 
-                                onPress={() => changeScreen(SCREEN.LOGIN)}
+                                onPress={() => changeScreen(Screens.LOGIN)}
                             >
                                 <Icon
                                     name='arrow-left'

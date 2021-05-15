@@ -4,23 +4,34 @@ import {View, KeyboardAvoidingView} from 'react-native';
 import auth from '@react-native-firebase/auth';
 
 import List from './List';
+import Preferences from './Preferences';
+
 import Recipe from './Recipe';
 import Header from './Header';
 import Footer from './Footer';
 import MenuModal, {MenuModalItem} from './MenuModal';
 
-import {SCREEN, HEADER_HEIGHT, FOOTER_HEIGHT, WINDOW} from './Constants';
+import {Screens, HEADER_HEIGHT, FOOTER_HEIGHT, WINDOW, MainScreens, isMainScreen} from './Constants';
 
 
 const AppScreen = () => {
 
-    const [userScreen, seUserScreen] = useState(SCREEN.LIST);
+    const [visibleScreen, _setVisibleScreen] = useState(Screens.LIST as Screens);
+    const [mainScreen, _setMainScreen] = useState(Screens.LIST as MainScreens);
+    const setVisibleScreen = (screen: Screens) => {
+        // Update mainScreen only if we are switching to a main screen!
+        if (isMainScreen(screen)){ 
+            _setMainScreen(screen)
+        }
+        _setVisibleScreen(screen)
+    }
+
     const [menuModalVisible, setMenuModalVisible] = useState(false);
     const [screenMenuItems, setScreenMenuItems]: [MenuModalItem[], React.Dispatch<MenuModalItem[]>] = useState([]);
     const [menuItems, setMenuItems]: [MenuModalItem[], React.Dispatch<MenuModalItem[]>] = useState([]);
 
-    const commonMenuItems: MenuModalItem[] = [
-        {text: 'Preferences', iconName: 'sliders', action: () => {}},
+    const commonMenuItems = [
+        {text: 'Preferences', iconName: 'sliders', action: ()=>{setVisibleScreen(Screens.PREFERENCES)}},
         {text: 'Disconnect', iconName: 'log-out', action: () => {auth().signOut()}},            
     ];
 
@@ -30,30 +41,31 @@ const AppScreen = () => {
 
     const screenData = {}
 
-    screenData[SCREEN.LIST] = {
+    screenData[Screens.LIST] = {
         headerTitle: 'My Lists',
     }
     
-    screenData[SCREEN.RECIPE] = {
+    screenData[Screens.RECIPE] = {
         headerTitle: 'My Recipes',
     }
 
-    const body = userScreen === SCREEN.LIST ? <List setMenuItems={setScreenMenuItems}/> : <Recipe setMenuItems={setScreenMenuItems}/>
+    const body = visibleScreen === Screens.LIST ? <List setMenuItems={setScreenMenuItems} /> : <Recipe/>
 
-    return (
-        <KeyboardAvoidingView style={{flex: 1}}>
-                <View style={{height: WINDOW.height}}>
-                    <MenuModal modalVisible={menuModalVisible} setModalVisible={setMenuModalVisible} items={menuItems}/>
-                    <View style={{height: HEADER_HEIGHT}}>
-                        <Header title={screenData[userScreen].headerTitle} displayMenu={setMenuModalVisible}/>
-                    </View>
-                    <View style={{height: WINDOW.height - (HEADER_HEIGHT + FOOTER_HEIGHT)}}>
-                        {body}
-                    </View>
-                    <View style={{height: FOOTER_HEIGHT}}>
-                        <Footer changeScreen={seUserScreen} selectedScreen={userScreen}/>
-                    </View>
+    return (visibleScreen === Screens.PREFERENCES ?
+        <Preferences mainScreen={mainScreen} setVisibleScreen={setVisibleScreen}></Preferences> :
+        <KeyboardAvoidingView style={{ flex: 1 }}>
+            <View style={{ height: WINDOW.height }}>
+                <MenuModal modalVisible={menuModalVisible} setModalVisible={setMenuModalVisible} items={menuItems} />
+                <View style={{ height: HEADER_HEIGHT }}>
+                    <Header title={screenData[visibleScreen].headerTitle} displayMenu={setMenuModalVisible} />
                 </View>
+                <View style={{ height: WINDOW.height - (HEADER_HEIGHT + FOOTER_HEIGHT) }}>
+                    {body}
+                </View>
+                <View style={{ height: FOOTER_HEIGHT }}>
+                    <Footer changeScreen={setVisibleScreen} selectedScreen={visibleScreen} />
+                </View>
+            </View>
         </KeyboardAvoidingView>
     );
 
