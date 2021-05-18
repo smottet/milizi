@@ -15,3 +15,9 @@ export enum FRIENDSHIP_STATE {
     PENDING = 'pending',
     ACCEPTED = 'accepted',
 }
+
+export enum Languages {
+    ENGLISH = 'en',
+    FRENCH = 'fr',
+    DUTCH = 'nl'
+}
