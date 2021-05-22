@@ -1,7 +1,9 @@
-import React, { FC, useState } from "react";
+import React, { FC, useContext, useState } from "react";
 import { Image, Picker, TouchableOpacity, View } from "react-native";
 import { Icon, Text } from "react-native-elements";
 import { Languages } from "../api/Constants";
+import { UserContext } from "../App";
+import { database } from "../Config";
 import { textStyle } from "../styles/Common";
 import { HEADER_HEIGHT, MainScreens, Screens, WINDOW } from "./Constants";
 
@@ -17,7 +19,14 @@ interface PreferencesInterface {
 const Preferences: FC<PreferencesInterface> = ({ setVisibleScreen, mainScreen }) => {
     const [selectedLanguage, setSelectedLanguage]: [Languages, React.Dispatch<string>] = useState(undefined);
     const [units, setUnits]: [string, React.Dispatch<string>] = useState(undefined);
+    const {user} = useContext(UserContext);
 
+    const setLanguage = (lang: string) => {
+        console.log(user)
+        const userLanguageRef = database.ref('/users/'+user.uid+'/lang/');
+        userLanguageRef.set(lang);    
+        setSelectedLanguage(lang)
+    }
 
     return (
         <View >
@@ -68,7 +77,7 @@ const Preferences: FC<PreferencesInterface> = ({ setVisibleScreen, mainScreen })
                 <Picker
                     selectedValue={selectedLanguage}
                     style={{ height: 50, width: 150 }}
-                    onValueChange={(itemValue, itemIndex) => setSelectedLanguage(itemValue)}
+                    onValueChange={(itemValue, itemIndex) => setLanguage(itemValue)}
                 >
                     <Picker.Item label="English" value='en' />
                     <Picker.Item label="Français" value="fr" />
